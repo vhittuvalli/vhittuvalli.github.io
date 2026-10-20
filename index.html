@@ -5,156 +5,277 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Varun Hittuvalli</title>
 <meta name="description" content="Varun Hittuvalli, computer science student at UT Austin. Projects: a telemetry replay platform, a self-driving simulator, and a post-quantum VPN.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;700;800&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
+/* Layout: a wide header with a rocket flight path drawn behind the name (a nod to the
+   telemetry project), then projects as large alternating screenshot + text rows, then a
+   timeline for experience. One accent: UT burnt orange. */
 :root {
-  --bg: #ffffff;
-  --text: #1f2328;
-  --muted: #656d76;
-  --accent: #bf5700;       /* UT burnt orange */
-  --rule: #e6e8eb;
-  --tile: #f3f4f6;
+  --bg: #fbfaf8;
+  --surface: #ffffff;
+  --text: #1c1f24;
+  --muted: #5f6672;
+  --faint: #e7e4df;
+  --accent: #bf5700;
+  --accent-soft: rgba(191, 87, 0, 0.1);
+  --grid: rgba(28, 31, 36, 0.06);
+  --shadow: 0 1px 2px rgba(28, 31, 36, 0.06), 0 12px 32px rgba(28, 31, 36, 0.1);
+  --display: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --body: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #131417; --text: #e8eaed; --muted: #9aa0a6; --accent: #ff8f3f; --rule: #2a2c31; --tile: #1d1f23;
+    --bg: #121316; --surface: #1a1c20; --text: #ecebe8; --muted: #a0a4ab; --faint: #2a2c31;
+    --accent: #ff8f3f; --accent-soft: rgba(255, 143, 63, 0.12); --grid: rgba(236, 235, 232, 0.05);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.35);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #131417; --text: #e8eaed; --muted: #9aa0a6; --accent: #ff8f3f; --rule: #2a2c31; --tile: #1d1f23;
+  --bg: #121316; --surface: #1a1c20; --text: #ecebe8; --muted: #a0a4ab; --faint: #2a2c31;
+  --accent: #ff8f3f; --accent-soft: rgba(255, 143, 63, 0.12); --grid: rgba(236, 235, 232, 0.05);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px rgba(0, 0, 0, 0.35);
   color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
 body {
   margin: 0; background: var(--bg); color: var(--text);
-  font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-  -webkit-font-smoothing: antialiased;
+  font: 18px/1.65 var(--body); -webkit-font-smoothing: antialiased;
 }
-main { max-width: 44rem; margin: 0 auto; padding-inline: 1.25rem; padding-block: 4rem 4rem; }
 a { color: var(--accent); text-decoration: none; }
-a:hover { text-decoration: underline; text-underline-offset: 0.15em; }
-a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
-h1 { font-size: 2.1rem; line-height: 1.15; margin: 0 0 0.75rem; letter-spacing: -0.015em; }
-h2 { font-size: 0.95rem; font-weight: 600; color: var(--muted); margin: 3.5rem 0 1.25rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--rule); }
-h3 { font-size: 1.15rem; margin: 0; }
+a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
 p { margin: 0 0 1rem; }
-.links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; margin-top: 1.25rem; }
+.wrap { max-width: 68rem; margin: 0 auto; padding-inline: 1.5rem; }
+.label { font: 500 0.75rem/1.4 var(--mono); letter-spacing: 0.04em; color: var(--muted); }
 
-.project { display: grid; gap: 0.9rem; margin-bottom: 3rem; }
-.project:last-child { margin-bottom: 0; }
+/* ---- header ---- */
+.hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--faint); }
+.hero::before {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: linear-gradient(to bottom, black 40%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent);
+}
+.flight { position: absolute; right: -1%; top: 10%; width: min(48%, 40rem); height: auto; pointer-events: none; }
+.flight .path { fill: none; stroke: var(--accent); stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
+.flight .ghost { fill: none; stroke: var(--accent); stroke-width: 1; stroke-dasharray: 3 6; opacity: 0.35; }
+.flight .dot { fill: var(--accent); }
+.flight .ring { fill: none; stroke: var(--accent); stroke-width: 1.5; opacity: 0.5; }
+.flight text { font: 500 11px var(--mono); fill: var(--muted); }
+.flight line { stroke: var(--muted); stroke-width: 1; opacity: 0.5; }
+.hero-inner { position: relative; padding-block: 6rem 4.5rem; }
+.hero h1 {
+  font: 800 clamp(2.8rem, 8vw, 5.2rem)/0.98 var(--display); letter-spacing: -0.035em;
+  margin: 0.6rem 0 1.4rem; max-width: 10ch; text-wrap: balance;
+}
+.hero .intro { font-size: 1.2rem; color: var(--muted); max-width: 34rem; }
+.hero .intro strong { color: var(--text); font-weight: 600; }
+.actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2rem; }
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  font: 600 0.95rem var(--body); padding: 0.65rem 1.1rem; border-radius: 999px;
+  border: 1px solid var(--faint); background: var(--surface); color: var(--text);
+}
+.btn:hover { text-decoration: none; border-color: var(--accent); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn svg { width: 1rem; height: 1rem; flex: none; }
+
+/* ---- sections ---- */
+section { padding-block: 5rem 1rem; }
+.section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 2.5rem; flex-wrap: wrap; }
+.section-head h2 { font: 700 clamp(1.7rem, 3.5vw, 2.3rem)/1.1 var(--display); letter-spacing: -0.02em; margin: 0; }
+
+/* ---- projects ---- */
+.project {
+  display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 3rem;
+  align-items: center; margin-bottom: 5.5rem;
+}
+.project:nth-of-type(even) .shot { order: 2; }
 .shot {
-  display: block; border-radius: 10px; overflow: hidden; border: 1px solid var(--rule);
-  aspect-ratio: 16 / 10; background: var(--tile);
+  display: block; position: relative; border-radius: 14px; overflow: hidden;
+  aspect-ratio: 16 / 10; background: var(--surface); box-shadow: var(--shadow); border: 1px solid var(--faint);
 }
-.shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
-.shot.icon { display: grid; place-items: center; }
-.shot.icon img { width: 30%; height: auto; max-width: 160px; }
-.project .stack { font-size: 0.88rem; color: var(--muted); margin: 0.15rem 0 0.5rem; }
-.project p { margin-bottom: 0.5rem; }
-.project .links { margin-top: 0.25rem; font-size: 0.95rem; }
-
-.job { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 1rem; margin-bottom: 1.4rem; }
-.job h3 { font-size: 1rem; }
-.job .when { color: var(--muted); font-size: 0.9rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.job .org { color: var(--muted); font-size: 0.95rem; grid-column: 1 / -1; }
-.job p { grid-column: 1 / -1; margin: 0.3rem 0 0; }
-
-footer { margin-top: 4rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); color: var(--muted); font-size: 0.9rem; }
-
-@media (max-width: 30rem) {
-  main { padding-block: 2.5rem 3rem; }
-  h1 { font-size: 1.8rem; }
-  .job { grid-template-columns: minmax(0, 1fr); }
-  .job .when { order: 2; }
+.shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top left; }
+.shot.icon { display: grid; place-items: center; background: radial-gradient(circle at 50% 45%, var(--accent-soft), transparent 70%), var(--surface); }
+.shot.icon img { width: 34%; height: auto; max-width: 180px; filter: drop-shadow(0 12px 24px rgba(191, 87, 0, 0.3)); }
+@media (prefers-reduced-motion: no-preference) {
+  .shot img { transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  .shot:hover img { transform: scale(1.03); }
+  .shot.icon:hover img { transform: scale(1.06) rotate(-2deg); }
 }
+.project h3 { font: 700 1.75rem/1.15 var(--display); letter-spacing: -0.02em; margin: 0.4rem 0 0.9rem; }
+.project h3 a { color: inherit; }
+.project p { color: var(--muted); }
+.tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 1.1rem 0 1.4rem; padding: 0; list-style: none; }
+.tags li { font: 0.75rem/1 var(--mono); padding: 0.4rem 0.6rem; border-radius: 6px; background: var(--accent-soft); color: var(--text); }
+.project .links { display: flex; gap: 1.4rem; font-weight: 600; }
+.project .links a::after { content: " →"; }
+
+/* ---- experience timeline ---- */
+.timeline { list-style: none; margin: 0; padding: 0 0 0 1.75rem; position: relative; max-width: 48rem; }
+.timeline::before { content: ""; position: absolute; left: 0.3rem; top: 0.6rem; bottom: 0.6rem; width: 2px; background: var(--faint); }
+.timeline li { position: relative; margin-bottom: 2.2rem; }
+.timeline li::before {
+  content: ""; position: absolute; left: -1.75rem; top: 0.45rem; width: 0.8rem; height: 0.8rem;
+  border-radius: 50%; background: var(--bg); border: 2px solid var(--accent);
+}
+.timeline li:first-child::before { background: var(--accent); }
+.timeline h3 { font: 700 1.15rem/1.3 var(--display); margin: 0.2rem 0 0.1rem; }
+.timeline .org { color: var(--text); font-weight: 600; }
+.timeline p { color: var(--muted); margin: 0.4rem 0 0; }
+
+.edu { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; align-items: baseline; max-width: 48rem; padding: 1.4rem 1.6rem; border: 1px solid var(--faint); border-radius: 14px; background: var(--surface); }
+.edu h3 { font: 700 1.15rem/1.3 var(--display); margin: 0; }
+.edu span { color: var(--muted); }
+
+/* ---- footer ---- */
+footer { margin-top: 6rem; border-top: 1px solid var(--faint); }
+footer .wrap { padding-block: 3.5rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 1.5rem; }
+footer .big { font: 700 clamp(1.6rem, 4vw, 2.4rem)/1.15 var(--display); letter-spacing: -0.02em; margin: 0.3rem 0 0; }
+footer .big a { color: var(--text); border-bottom: 3px solid var(--accent); }
+footer .big a:hover { text-decoration: none; color: var(--accent); }
+
+@media (max-width: 52rem) {
+  .project { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; margin-bottom: 4rem; }
+  .project:nth-of-type(even) .shot { order: 0; }
+  .flight { display: none; } /* no room beside the text on narrow screens */
+  .hero-inner { padding-block: 4rem 3rem; }
+}
+
+/* The flight path draws in once; at rest (and with reduced motion) it's fully drawn. */
+@media (prefers-reduced-motion: no-preference) {
+  .flight .path { animation: draw 2.4s cubic-bezier(0.45, 0, 0.2, 1) 0.2s both; }
+  .flight .rocket { offset-path: path("M 40 330 C 170 70, 330 30, 430 60 S 640 230, 700 330"); animation: fly 2.4s cubic-bezier(0.45, 0, 0.2, 1) 0.2s both; }
+  .flight .tag { animation: fade 0.6s ease 1.6s both; }
+}
+@keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes fly { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 </style>
 </head>
 <body>
-<main>
-  <header>
+
+<header class="hero">
+  <svg class="flight" viewBox="0 0 740 360" aria-hidden="true">
+    <path class="ghost" d="M 40 330 C 150 110, 320 70, 430 95 S 650 250, 720 330"/>
+    <path class="path" pathLength="1" d="M 40 330 C 170 70, 330 30, 430 60 S 640 230, 700 330"/>
+    <g class="tag">
+      <line x1="360" y1="44" x2="360" y2="14"/>
+      <circle class="ring" cx="360" cy="44" r="7"/>
+      <text x="368" y="18">apogee 595 m · T+10.3 s</text>
+      <text x="22" y="352">liftoff</text>
+      <text x="660" y="352">landing</text>
+    </g>
+    <g class="rocket"><circle class="dot" r="5"/></g>
+  </svg>
+  <div class="wrap hero-inner">
+    <div class="label">CS @ UT Austin · class of 2030</div>
     <h1>Varun Hittuvalli</h1>
-    <p>I study computer science at UT Austin and graduate in 2030. I like building things all the way through, from the physics or the protocol up to something people can actually open and use. Lately that's meant simulators, machine learning and networking.</p>
-    <div class="links">
-      <a href="mailto:vhittuvalli@gmail.com">vhittuvalli@gmail.com</a>
-      <a href="https://github.com/vhittuvalli">GitHub</a>
+    <p class="intro">I study computer science at UT Austin and graduate in 2030. I like building things all the way through, from the physics or the protocol up to something people can actually open and use. Lately that's meant <strong>simulators, machine learning and networking</strong>.</p>
+    <div class="actions">
+      <a class="btn primary" href="mailto:vhittuvalli@gmail.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        Email me
+      </a>
+      <a class="btn" href="https://github.com/vhittuvalli">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.4-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+        GitHub
+      </a>
     </div>
-  </header>
+  </div>
+</header>
 
-  <h2>Projects</h2>
+<main>
+  <section class="wrap" aria-labelledby="projects-h">
+    <div class="section-head">
+      <h2 id="projects-h">Projects</h2>
+      <span class="label">all three are live · click to try them</span>
+    </div>
 
-  <article class="project">
-    <a class="shot" href="https://telemetry-platform.onrender.com"><img src="img/telemetry.jpg" alt="A rocket lifting off in the Telemetry Platform viewer, with flight data, events and Monte Carlo results beside it" loading="lazy"></a>
-    <div>
-      <h3>Telemetry Platform</h3>
-      <div class="stack">Python · FastAPI · pandas · Angular · three.js · Docker</div>
-      <p>Replays real Formula 1 races and rocket flights in 3D on one engine. Any F1 session from 2018 on loads with every car on track. The rocket side is a 6-DOF flight simulator I wrote, which lands within 1.5% of OpenRocket's apogee on four designs and draws Monte Carlo landing zones. Both can also stream live over UDP or WebSockets.</p>
-      <div class="links">
-        <a href="https://telemetry-platform.onrender.com">Open it</a>
-        <a href="https://github.com/vhittuvalli/telemetry-platform">Code</a>
+    <article class="project">
+      <a class="shot" href="https://telemetry-platform.onrender.com"><img src="img/telemetry.jpg" alt="A rocket lifting off in the Telemetry Platform viewer, with flight data, events and Monte Carlo results beside it" loading="lazy"></a>
+      <div>
+        <div class="label">F1 + rocket telemetry in 3D</div>
+        <h3><a href="https://telemetry-platform.onrender.com">Telemetry Platform</a></h3>
+        <p>Replays real Formula 1 races and rocket flights in 3D on one engine. Any F1 session from 2018 on loads with every car on track. The rocket side is a 6-DOF flight simulator I wrote, which lands within 1.5% of OpenRocket's apogee on four designs and draws Monte Carlo landing zones. Both can also stream live over UDP or WebSockets.</p>
+        <ul class="tags"><li>Python</li><li>FastAPI</li><li>pandas</li><li>Angular</li><li>three.js</li><li>Docker</li></ul>
+        <div class="links"><a href="https://telemetry-platform.onrender.com">Open it</a><a href="https://github.com/vhittuvalli/telemetry-platform">Code</a></div>
       </div>
-    </div>
-  </article>
+    </article>
 
-  <article class="project">
-    <a class="shot" href="https://vhittuvalli.github.io/drivesim/?neural=1&amp;cam=chase"><img src="img/drivesim.jpg" alt="DriveSim in a city street, with the neural driver's camera, segmentation and steering views" loading="lazy"></a>
-    <div>
-      <h3>DriveSim</h3>
-      <div class="stack">JavaScript · three.js · PyTorch · ONNX Runtime Web</div>
-      <p>A self-driving car simulator that runs in the browser: a procedural city and six-lane highway with traffic that changes lanes, weather, and 11 pass/fail scenarios. The car is driven by a network I trained in PyTorch on 344K frames from 895 automated runs, running live in the page. An expert driver labels the data and rides along as a safety driver.</p>
-      <div class="links">
-        <a href="https://vhittuvalli.github.io/drivesim/?neural=1&amp;cam=chase">Watch it drive</a>
-        <a href="https://github.com/vhittuvalli/drivesim">Code</a>
+    <article class="project">
+      <a class="shot" href="https://vhittuvalli.github.io/drivesim/?neural=1&amp;cam=chase"><img src="img/drivesim.jpg" alt="DriveSim in a city street, with the neural driver's camera, segmentation and steering views" loading="lazy"></a>
+      <div>
+        <div class="label">self-driving in the browser</div>
+        <h3><a href="https://vhittuvalli.github.io/drivesim/?neural=1&amp;cam=chase">DriveSim</a></h3>
+        <p>A self-driving car simulator that runs in the browser: a procedural city and six-lane highway with traffic that changes lanes, weather, and 11 pass/fail scenarios. The car is driven by a network I trained in PyTorch on 344K frames from 895 automated runs, running live in the page. An expert driver labels the data and rides along as a safety driver.</p>
+        <ul class="tags"><li>JavaScript</li><li>three.js</li><li>PyTorch</li><li>ONNX Runtime Web</li></ul>
+        <div class="links"><a href="https://vhittuvalli.github.io/drivesim/?neural=1&amp;cam=chase">Watch it drive</a><a href="https://github.com/vhittuvalli/drivesim">Code</a></div>
       </div>
-    </div>
-  </article>
+    </article>
 
-  <article class="project">
-    <a class="shot icon" href="https://vhittuvalli.github.io/vpn/"><img src="img/vpn-icon.png" alt="The VPN app icon" loading="lazy"></a>
-    <div>
-      <h3>VPN</h3>
-      <div class="stack">Go · post-quantum cryptography · macOS</div>
-      <p>A VPN written from scratch in Go, built like WireGuard with ML-KEM and ML-DSA added so recorded traffic stays private against future quantum computers. It ships as a Mac menu bar app with a kill switch and trusted Wi-Fi, plus a server you set up with one command and share with invite keys.</p>
-      <div class="links">
-        <a href="https://vhittuvalli.github.io/vpn/">Download</a>
-        <a href="https://github.com/vhittuvalli/vpn">Code</a>
+    <article class="project">
+      <a class="shot icon" href="https://vhittuvalli.github.io/vpn/"><img src="img/vpn-icon.png" alt="The VPN app icon" loading="lazy"></a>
+      <div>
+        <div class="label">post-quantum VPN for the Mac</div>
+        <h3><a href="https://vhittuvalli.github.io/vpn/">VPN</a></h3>
+        <p>A VPN written from scratch in Go, built like WireGuard with ML-KEM and ML-DSA added so recorded traffic stays private against future quantum computers. It ships as a Mac menu bar app with a kill switch and trusted Wi-Fi, plus a server you set up with one command and share with invite keys.</p>
+        <ul class="tags"><li>Go</li><li>ML-KEM / ML-DSA</li><li>macOS</li><li>Linux</li></ul>
+        <div class="links"><a href="https://vhittuvalli.github.io/vpn/">Download</a><a href="https://github.com/vhittuvalli/vpn">Code</a></div>
       </div>
+    </article>
+  </section>
+
+  <section class="wrap" aria-labelledby="exp-h">
+    <div class="section-head"><h2 id="exp-h">Experience</h2></div>
+    <ol class="timeline">
+      <li>
+        <div class="label">NOV 2024 – MAY 2026</div>
+        <h3>Software Engineer · <span class="org">Lead4Tomorrow</span></h3>
+        <p>Built an iOS calendar app in Swift with daily inspirational content for a nonprofit, backed by a Flask API, plus scheduled email and push notifications through APNs.</p>
+      </li>
+      <li>
+        <div class="label">JUN – AUG 2025</div>
+        <h3>Research Intern · <span class="org">UT Dallas NLP + Knowledge &amp; Reasoning Lab</span></h3>
+        <p>Built n-gram text prediction models, ran sentiment analysis over large text corpora, and studied hard versus soft prompting for language models.</p>
+      </li>
+      <li>
+        <div class="label">SUMMER 2024</div>
+        <h3>Software Engineer Intern · <span class="org">Instapay Technologies</span></h3>
+        <p>Designed a support chatbot for the company's app and website, and built features ahead of a launch to 120K+ users processing $1.5M a day.</p>
+      </li>
+      <li>
+        <div class="label">MAY 2024</div>
+        <h3>Researcher · <span class="org">Curieux Academic Journal</span></h3>
+        <p>Published a peer-reviewed paper on detecting Parkinson's disease from handwriting: an AdaBoost model on spiral-drawing features reached 96.9% accuracy on the test set.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="wrap" aria-labelledby="edu-h">
+    <div class="section-head"><h2 id="edu-h">Education</h2></div>
+    <div class="edu">
+      <div><h3>B.S. in Computer Science</h3><span>The University of Texas at Austin</span></div>
+      <span class="label">EXPECTED MAY 2030</span>
     </div>
-  </article>
-
-  <h2>Experience</h2>
-
-  <div class="job">
-    <h3>Software Engineer</h3><span class="when">Nov 2024 – May 2026</span>
-    <span class="org">Lead4Tomorrow (nonprofit)</span>
-    <p>Built an iOS calendar app in Swift with daily inspirational content, backed by a Flask API, plus scheduled email and push notifications through APNs.</p>
-  </div>
-  <div class="job">
-    <h3>Research Intern</h3><span class="when">Jun – Aug 2025</span>
-    <span class="org">UT Dallas, NLP + Knowledge &amp; Reasoning Lab</span>
-    <p>Built n-gram text prediction models, ran sentiment analysis over large text corpora, and studied hard versus soft prompting for language models.</p>
-  </div>
-  <div class="job">
-    <h3>Software Engineer Intern</h3><span class="when">Summer 2024</span>
-    <span class="org">Instapay Technologies</span>
-    <p>Designed a support chatbot for the company's app and website, and built features ahead of a launch to 120K+ users processing $1.5M a day.</p>
-  </div>
-  <div class="job">
-    <h3>Researcher</h3><span class="when">May 2024</span>
-    <span class="org">Curieux Academic Journal</span>
-    <p>Published a peer-reviewed paper on detecting Parkinson's disease from handwriting: an AdaBoost model on spiral-drawing features reached 96.9% accuracy on the test set.</p>
-  </div>
-
-  <h2>Education</h2>
-  <div class="job">
-    <h3>B.S. in Computer Science</h3><span class="when">Expected May 2030</span>
-    <span class="org">The University of Texas at Austin</span>
-  </div>
-
-  <footer>
-    Varun Hittuvalli · Austin, TX
-  </footer>
+  </section>
 </main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <div class="label">want to talk?</div>
+      <p class="big"><a href="mailto:vhittuvalli@gmail.com">vhittuvalli@gmail.com</a></p>
+    </div>
+    <span class="label">Austin, TX · <a href="https://github.com/vhittuvalli">github.com/vhittuvalli</a></span>
+  </div>
+</footer>
 </body>
 </html>
