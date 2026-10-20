@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Varun Hittuvalli</title>
+<meta name="description" content="Varun Hittuvalli, computer science student at UT Austin. Projects: a telemetry replay platform, a self-driving simulator, and a post-quantum VPN.">
+<style>
+:root {
+  --bg: #ffffff;
+  --text: #1f2328;
+  --muted: #656d76;
+  --accent: #bf5700;       /* UT burnt orange */
+  --rule: #e6e8eb;
+  --tile: #f3f4f6;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131417; --text: #e8eaed; --muted: #9aa0a6; --accent: #ff8f3f; --rule: #2a2c31; --tile: #1d1f23;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131417; --text: #e8eaed; --muted: #9aa0a6; --accent: #ff8f3f; --rule: #2a2c31; --tile: #1d1f23;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+main { max-width: 44rem; margin: 0 auto; padding-inline: 1.25rem; padding-block: 4rem 4rem; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 0.15em; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 2px; }
+h1 { font-size: 2.1rem; line-height: 1.15; margin: 0 0 0.75rem; letter-spacing: -0.015em; }
+h2 { font-size: 0.95rem; font-weight: 600; color: var(--muted); margin: 3.5rem 0 1.25rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--rule); }
+h3 { font-size: 1.15rem; margin: 0; }
+p { margin: 0 0 1rem; }
+.links { display: flex; flex-wrap: wrap; gap: 0.4rem 1.25rem; margin-top: 1.25rem; }
+
+.project { display: grid; gap: 0.9rem; margin-bottom: 3rem; }
+.project:last-child { margin-bottom: 0; }
+.shot {
+  display: block; border-radius: 10px; overflow: hidden; border: 1px solid var(--rule);
+  aspect-ratio: 16 / 10; background: var(--tile);
+}
+.shot img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.shot.icon { display: grid; place-items: center; }
+.shot.icon img { width: 30%; height: auto; max-width: 160px; }
+.project .stack { font-size: 0.88rem; color: var(--muted); margin: 0.15rem 0 0.5rem; }
+.project p { margin-bottom: 0.5rem; }
+.project .links { margin-top: 0.25rem; font-size: 0.95rem; }
+
+.job { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 1rem; margin-bottom: 1.4rem; }
+.job h3 { font-size: 1rem; }
+.job .when { color: var(--muted); font-size: 0.9rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.job .org { color: var(--muted); font-size: 0.95rem; grid-column: 1 / -1; }
+.job p { grid-column: 1 / -1; margin: 0.3rem 0 0; }
+
+footer { margin-top: 4rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); color: var(--muted); font-size: 0.9rem; }
+
+@media (max-width: 30rem) {
+  main { padding-block: 2.5rem 3rem; }
+  h1 { font-size: 1.8rem; }
+  .job { grid-template-columns: minmax(0, 1fr); }
+  .job .when { order: 2; }
+}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Varun Hittuvalli</h1>
+    <p>I study computer science at UT Austin and graduate in 2030. I like building things all the way through, from the physics or the protocol up to something people can actually open and use. Lately that's meant simulators, machine learning and networking.</p>
+    <div class="links">
+      <a href="mailto:vhittuvalli@gmail.com">vhittuvalli@gmail.com</a>
+      <a href="https://github.com/vhittuvalli">GitHub</a>
+    </div>
+  </header>
+
+  <h2>Projects</h2>
+
+  <article class="project">
+    <a class="shot" href="https://telemetry-platform.onrender.com"><img src="img/telemetry.jpg" alt="A rocket lifting off in the Telemetry Platform viewer, with flight data, events and Monte Carlo results beside it" loading="lazy"></a>
+    <div>
+      <h3>Telemetry Platform</h3>
+      <div class="stack">Python · FastAPI · pandas · Angular · three.js · Docker</div>
+      <p>Replays real Formula 1 races and rocket flights in 3D on one engine. Any F1 session from 2018 on loads with every car on track. The rocket side is a 6-DOF flight simulator I wrote, which lands within 1.5% of OpenRocket's apogee on four designs and draws Monte Carlo landing zones. Both can also stream live over UDP or WebSockets.</p>
+      <div class="links">
+        <a href="https://telemetry-platform.onrender.com">Open it</a>
+        <a href="https://github.com/vhittuvalli/telemetry-platform">Code</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="project">
+    <a class="shot" href="https://vhittuvalli.github.io/drivesim/?neural=1&amp;cam=chase"><img src="img/drivesim.jpg" alt="DriveSim in a city street, with the neural driver's camera, segmentation and steering views" loading="lazy"></a>
+    <div>
+      <h3>DriveSim</h3>
+      <div class="stack">JavaScript · three.js · PyTorch · ONNX Runtime Web</div>
+      <p>A self-driving car simulator that runs in the browser: a procedural city and six-lane highway with traffic that changes lanes, weather, and 11 pass/fail scenarios. The car is driven by a network I trained in PyTorch on 344K frames from 895 automated runs, running live in the page. An expert driver labels the data and rides along as a safety driver.</p>
+      <div class="links">
+        <a href="https://vhittuvalli.github.io/drivesim/?neural=1&amp;cam=chase">Watch it drive</a>
+        <a href="https://github.com/vhittuvalli/drivesim">Code</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="project">
+    <a class="shot icon" href="https://vhittuvalli.github.io/vpn/"><img src="img/vpn-icon.png" alt="The VPN app icon" loading="lazy"></a>
+    <div>
+      <h3>VPN</h3>
+      <div class="stack">Go · post-quantum cryptography · macOS</div>
+      <p>A VPN written from scratch in Go, built like WireGuard with ML-KEM and ML-DSA added so recorded traffic stays private against future quantum computers. It ships as a Mac menu bar app with a kill switch and trusted Wi-Fi, plus a server you set up with one command and share with invite keys.</p>
+      <div class="links">
+        <a href="https://vhittuvalli.github.io/vpn/">Download</a>
+        <a href="https://github.com/vhittuvalli/vpn">Code</a>
+      </div>
+    </div>
+  </article>
+
+  <h2>Experience</h2>
+
+  <div class="job">
+    <h3>Software Engineer</h3><span class="when">Nov 2024 – May 2026</span>
+    <span class="org">Lead4Tomorrow (nonprofit)</span>
+    <p>Built an iOS calendar app in Swift with daily inspirational content, backed by a Flask API, plus scheduled email and push notifications through APNs.</p>
+  </div>
+  <div class="job">
+    <h3>Research Intern</h3><span class="when">Jun – Aug 2025</span>
+    <span class="org">UT Dallas, NLP + Knowledge &amp; Reasoning Lab</span>
+    <p>Built n-gram text prediction models, ran sentiment analysis over large text corpora, and studied hard versus soft prompting for language models.</p>
+  </div>
+  <div class="job">
+    <h3>Software Engineer Intern</h3><span class="when">Summer 2024</span>
+    <span class="org">Instapay Technologies</span>
+    <p>Designed a support chatbot for the company's app and website, and built features ahead of a launch to 120K+ users processing $1.5M a day.</p>
+  </div>
+  <div class="job">
+    <h3>Researcher</h3><span class="when">May 2024</span>
+    <span class="org">Curieux Academic Journal</span>
+    <p>Published a peer-reviewed paper on detecting Parkinson's disease from handwriting: an AdaBoost model on spiral-drawing features reached 96.9% accuracy on the test set.</p>
+  </div>
+
+  <h2>Education</h2>
+  <div class="job">
+    <h3>B.S. in Computer Science</h3><span class="when">Expected May 2030</span>
+    <span class="org">The University of Texas at Austin</span>
+  </div>
+
+  <footer>
+    Varun Hittuvalli · Austin, TX
+  </footer>
+</main>
+</body>
+</html>
